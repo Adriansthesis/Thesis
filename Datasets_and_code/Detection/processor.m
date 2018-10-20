@@ -3,7 +3,7 @@ close all;
 %% Specify Dataset
 
 
-Range_align = 0;
+Range_align = 1;
 
 PRF = 100;
 % Dataset = '41 Jason walking arms swinging (109MHz).wav';
@@ -19,7 +19,9 @@ PRF = 100;
 % Dataset = '52 Jason wlaking arms swinging 1(109 MHz).wav';
 % Dataset = '53 Jason wlaking arms swinging 2(109 MHz).wav';
 % Dataset = '54 Jason wlaking arms swinging 3(109 MHz).wav';
-Dataset = '55 Jason wlaking arms swinging 4(109 MHz).wav';
+% Dataset = '55 Jason wlaking arms swinging 4(109 MHz).wav';
+
+Dataset = '80 walking to and from 6 kmh.wav';
 
 
 %% Get range lines
@@ -37,8 +39,8 @@ load ring_road_filter;
 
 Filtered_Range_Lines = filter(h,1,Range_Lines,[],1);
 Filtered_Range_Lines = Filtered_Range_Lines(length(h):end,:);
-Filtered_Range_Lines = Filtered_Range_Lines(:,3:end);
-range_axis = range_axis(3:end);
+Filtered_Range_Lines = Filtered_Range_Lines(:,1:end);
+range_axis = range_axis(1:end);
 time_axis = time_axis(length(h):end);
 
 % figure;	
