@@ -1,0 +1,34 @@
+Pfa = 10e-3;
+
+SNR_dB = 20;
+SNR_lin = 10^(SNR_dB)/10;
+
+Iterations = 10e6;
+
+%% Pfa
+I_interf = normrnd(0,1,[1,Iterations]);
+Q_interf = normrnd(0,1,[1,Iterations]);
+
+Input_Signal = (I_interf+j*Q_interf)/sqrt(2);
+
+Signal_After_Detector = abs(Input_Signal);
+
+T = 1*sqrt(-log(Pfa));
+
+False_Alarms = sum((Signal_After_Detector-T)>0);
+Simulated_Pfa = False_Alarms/Iterations
+
+Pfa_Error = 100*(Simulated_Pfa-Pfa)/Pfa
+
+%% Pd
+
+Target_Voltage = sqrt(SNR_lin);
+
+I_targ = normrnd(0,1,[1,Iterations]);
+Q_targ = normrnd(0,1,[1,Iterations]);
+
+Target_Signal = Target_Voltage*(I_targ + j*Q_targ)/sqrt(2);
+
+
+
+
