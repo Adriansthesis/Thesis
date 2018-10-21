@@ -1,3 +1,9 @@
+%% Setup
+% 1 - 1D
+% 0 - 2D
+Dimension = 0;
+
+
 %%Using dataset 54 SNR approx 40dB
 
 Shifted_Ra = circshift(Ra_Data,[0,round(size(Ra_Data,2)/2)]);
@@ -16,9 +22,9 @@ for i = 1:5:size(Shifted_Ra,2)-5
     Itegrated_range_lines = [Itegrated_range_lines , integrated_section ];
 end
 
-Signal_Power = 20*log10(abs(mean(Itegrated_range_lines(:,10:13))));
+Signal_Power = 20*log10(abs(mean(Itegrated_range_lines(:,14:16))));
 Signal_Power = mean(Signal_Power);
-Noise = [Itegrated_range_lines(:,1:9),Itegrated_range_lines(:,14:end)];
+Noise = [Itegrated_range_lines(:,1:14),Itegrated_range_lines(:,17:end)];
 Noise_Power = 20*log10(abs(mean(Noise(:))));
 SNR_dB = Signal_Power - Noise_Power;
 % SNR_dB = 12;
@@ -87,7 +93,7 @@ for Pfa_index = 1:length(Pfa_values)
 
     Detections_rt = Detections_rt(:,Window_Size_time_1+Gaurd_Cells_time_1+1 : end-Window_Size_time_1-Gaurd_Cells_time_1-1);
     
-    Target_region_1 = Detections_rt(:,4:5);
+    Target_region_1 = Detections_rt(:,8);
     dimensions1 = size(Target_region_1);
     Pd1(Pfa_index) = sum(Target_region_1(:))/(dimensions1(1)*dimensions1(2));
     
@@ -95,13 +101,16 @@ for Pfa_index = 1:length(Pfa_values)
     
    Detections3_rt = Detections3_rt(Window_Size_2D_time+Gaurd_Cells_2D_time +1: end-Window_Size_2D_time-Gaurd_Cells_2D_time-1,Window_Size_2D_time+Gaurd_Cells_2D_time +1 : end-Window_Size_2D_time-Gaurd_Cells_2D_time-1);
    
-   Target_region_2 = Detections3_rt(Window_Size_2D_time:end - Window_Size_2D_time,6:7);
+   Target_region_2 = Detections3_rt(Window_Size_2D_time:end - Window_Size_2D_time,10);
    dimensions2 = size(Target_region_2);
    Pd2(Pfa_index) = sum(Target_region_2(:))/(dimensions2(1)*dimensions2(2));
    
    
-   
-   N = N2;
+   if Dimension
+        N = N1;
+   else
+       N = N2;
+   end
    index = round(N*0.75);
    alpha_values_OS = 1:1:500;
    Pfa_values_OS = factorial(N)*factorial(alpha_values_OS+N-index)./(factorial(N-index)*factorial(alpha_values_OS+N));
@@ -118,18 +127,17 @@ for Pfa_index = 1:length(Pfa_values)
 
 end
 
-% figure;
-% 
-% semilogx(Pfa_values,Pd1);
-% 
-% hold on;
-% semilogx(Pfa_values,Pd_OS);
-% legend('1D Pd','Ideal Pd');
-% title(strcat('Pd vs Pfa for SNR: ',num2str(SNR_dB),' dB'));
-% xlabel('Pfa');
-% ylabel('Pd');
+if Dimension
+figure;
+semilogx(Pfa_values,Pd1);
+hold on;
+semilogx(Pfa_values,Pd_OS);
+legend('1D Pd','Ideal Pd');
+title(strcat('Pd vs Pfa for SNR: ',num2str(SNR_dB),' dB'));
+xlabel('Pfa');
+ylabel('Pd');
 
-
+else
 figure;
 
 semilogx(Pfa_values,Pd2)
@@ -139,3 +147,4 @@ legend('2D Pd','Ideal Pd');
 title(strcat('Pd vs Pfa for SNR: ',num2str(SNR_dB),' dB'));
 xlabel('Pfa');
 ylabel('Pd');
+end

@@ -1,9 +1,9 @@
-clear all;
+clear all;  
 close all;
 %% Specify Dataset
 
 
-Range_align = 1;
+Range_align = 0;
 
 PRF = 100;
 % Dataset = '41 Jason walking arms swinging (109MHz).wav';
@@ -21,8 +21,8 @@ PRF = 100;
 % Dataset = '54 Jason wlaking arms swinging 3(109 MHz).wav';
 % Dataset = '55 Jason wlaking arms swinging 4(109 MHz).wav';
 
-Dataset = '80 walking to and from 6 kmh.wav';
-
+% Dataset = '80 walking to and from 6 kmh.wav';
+Dataset = '58 Nothing (109MHz).wav';
 
 %% Get range lines
 
@@ -39,8 +39,8 @@ load ring_road_filter;
 
 Filtered_Range_Lines = filter(h,1,Range_Lines,[],1);
 Filtered_Range_Lines = Filtered_Range_Lines(length(h):end,:);
-Filtered_Range_Lines = Filtered_Range_Lines(:,1:end);
-range_axis = range_axis(1:end);
+Filtered_Range_Lines = Filtered_Range_Lines(:,3:end);
+range_axis = range_axis(3:end);
 time_axis = time_axis(length(h):end);
 
 % figure;	
@@ -166,8 +166,8 @@ Detections3_rt = double((SD_data-Threshold3)>0);
 % Ra_Data(1:Window_Size_2D_time+Gaurd_Cells_2D_time,:) = 0;
 % Ra_Data(end-Window_Size_2D_time-Gaurd_Cells_2D_time:end,:) = 0;
 
-% X_Marker(Ra_Data,Detections_rt,range_axis,time_axis,'1D Time Domain Detection');
-% X_Marker(Ra_Data,Detections3_rt,range_axis,time_axis, '2D Time Domain Detection');
+X_Marker(Ra_Data,Detections_rt,range_axis,time_axis,'1D Time Domain Detection');
+X_Marker(Ra_Data,Detections3_rt,range_axis,time_axis, '2D Time Domain Detection');
 
 % Detections_rt(:,1:Window_Size_time_1+Gaurd_Cells_time_1) = 0;
 % Detections_rt(:,end-Window_Size_time_1-Gaurd_Cells_time_1:end) = 0;
@@ -209,11 +209,7 @@ disp(N);
 
 % Detections_Rec_rd = Doppler_Detector_Rec(0.8,0.3,10,2,Pfa, Window_Size_2D_doppler_X, Gaurd_Cells_2D_doppler_X, Window_Size_2D_doppler_Y, Gaurd_Cells_2D_doppler_Y,Np,PRF,Ra_Data);
 
-% Detections_Plotter(Ra_Data,Detections_2D_rd,range_axis,time_axis,'Doppler Domain Detection Square');
-% Detections_Plotter(Ra_Data,Detections_Rec_rd,range_axis,time_axis,'Doppler Domain Detection Rectangle');
-
-% close all;
-% X_Marker(Ra_Data,Detections_2D_rd,range_axis,time_axis,'Doppler Domain Detection');
+X_Marker(Ra_Data,Detections_2D_rd,range_axis,time_axis,'Doppler Domain Detection');
 % 
 %% Freq plot
 % 
@@ -390,36 +386,5 @@ for i = 1:1:recording_size(1)-time_step
 	end
 end
 
-% figure;
-% imagesc(Detections_time_combination);
-% 
-% 
-% figure;
-% imagesc(range_axis,time_axis,20*log10(abs(Ra_Data))+20*log10(30*(Detections_time_doppler)+1));
-% ylabel('Time (s)');
-% xlabel('Range (m)');
-% title('Time and Doppler domain detection');
-% colormap(jet(256));
-% colorbar;
-% axis xy;
-% 
-% Detections_Plotter(Ra_Data,Detections_time_combination,range_axis,time_axis,'Range combination detection');
-% Detections_Plotter(Ra_Data,Detections_time_doppler,range_axis,time_axis,'Time and Square Doppler domain detection');
-% Detections_Plotter(Ra_Data,Detections_time_doppler_2,range_axis,time_axis,'Time and Rectangle Doppler domain detection ');
 
-% X_Marker(Ra_Data,Detections_time_doppler,range_axis,time_axis,'Time and Doppler domain combination detection');
-
-% figure
-% imagesc(log10(abs(Ra_Data)));
-
-% X_Marker(Ra_Data,Detections_time_doppler_2,range_axis,time_axis,'Time and Rectangle Doppler domain detection ');
-
-% X_Marker(Ra_Data,Detections_time_combination,range_axis,time_axis,'Range combination detection');
-
-close all;
-% 
-% Detections_time_combination(:,1:Window_Size_2D_time+Gaurd_Cells_2D_time) = 0;
-% Detections_time_combination(:,end-Window_Size_2D_time-Gaurd_Cells_2D_time:end) = 0;
-% Detections_time_combination(1:Window_Size_2D_time+Gaurd_Cells_2D_time,:) = 0;
-% Detections_time_combination(end-Window_Size_2D_time-Gaurd_Cells_2D_time:end,:) = 0;
 Final_Detection_Plotter(Ra_Data,Detections_time_combination, Detections_2D_rd, Detections_time_doppler,range_axis,time_axis,'one');
